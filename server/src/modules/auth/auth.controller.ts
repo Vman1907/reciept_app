@@ -76,3 +76,6 @@ export const logout = (req: Request, res: Response) => {
 	res.status(200).json({ message: 'Logged out successfully' });
 	return;
 };
+export const validateAuth = (req: Request, res: Response) => {
+	res.status(200).json({ message: 'User is authenticated', success: true });
+};

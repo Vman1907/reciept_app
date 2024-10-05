@@ -1,12 +1,18 @@
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express from 'express';
 import { connectDB } from './config/db.config';
 import authRoutes from './modules/auth/auth.routes';
 import receiptRoutes from './modules/receipt/receipt.routes';
 
-const app = express();
+const corsOptions = {
+	credentials: true,
+};
 
+const app = express();
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/receipts', receiptRoutes);
 app.use('/api/auth', authRoutes);
