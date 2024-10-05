@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react'; // Your axios instance c
 import AuthService from '../services/auth.service';
 
 let isAuthInitialized = false;
-let isAuthenticatedState = true;
+let isAuthenticatedState = false;
 let setIsAuthenticatedState: (status: boolean) => void = () => {};
 
 export const useAuth = () => {

@@ -1,85 +1,41 @@
-import * as React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import useBottomNavigation from '../../hooks/useBottomNavigation';
-import {COLORS} from '../../utils/const';
-import Button from '../elements/button';
-import Text from '../elements/text';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {HOME} from '../../../assets/image';
+
+const Tab = createBottomTabNavigator();
 
 export default function BottomNavigation() {
-  const {pages, page: currentPage, handleChangePage} = useBottomNavigation();
-
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <View>
-          <Text>Header</Text>
-        </View>
-        <View style={styles.pageContainer}>
-          <View>{currentPage.component}</View>
-        </View>
-        <View style={styles.bottomContainer}>
-          {pages.map((page, index) => (
-            <Button
-              mode="text"
-              onPress={() => handleChangePage(index)}
-              key={index}>
-              <View style={styles.bottomNavigationButton}>
-                <View>
-                  <page.Icon
-                    stroke={
-                      page === currentPage ? COLORS.PRIMARY : COLORS.TEXT_MUTED
-                    }
-                  />
-                </View>
-                <View>
-                  <Text
-                    style={[
-                      styles.bottomNavigationText,
-                      page !== currentPage ? styles.textMuted : null,
-                    ]}>
-                    {page.title}
-                  </Text>
-                </View>
-              </View>
-            </Button>
-          ))}
-        </View>
-      </View>
-    </SafeAreaView>
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = focused
+              ? 'ios-information-circle'
+              : 'ios-information-circle-outline';
+          } else if (route.name === 'Settings') {
+            iconName = focused ? 'ios-list' : 'ios-list-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'ios-list' : 'ios-list-outline';
+          } else if (route.name === 'Search') {
+            iconName = focused ? 'ios-list' : 'ios-list-outline';
+          } else if (route.name === 'Receipt') {
+            iconName = focused ? 'ios-list' : 'ios-list-outline';
+          }
+
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+      })}>
+      <Tab.Screen name="Home" component={HOME} />
+      <Tab.Screen name="Receipt" component={HOME} />
+      <Tab.Screen name="Search" component={HOME} />
+      <Tab.Screen name="Profile" component={HOME} />
+    </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: '5%',
-    display: 'flex',
-    height: '100%',
-  },
-  text: {
-    fontSize: 20,
-    color: 'black',
-  },
-  pageContainer: {
-    flex: 1,
-  },
-  bottomContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    fontSize: 12,
-  },
-  bottomNavigationButton: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bottomNavigationText: {
-    fontSize: 14,
-    color: COLORS.PRIMARY,
-  },
-  textMuted: {
-    color: COLORS.TEXT_MUTED,
-  },
-});

@@ -26,34 +26,32 @@ function App(): React.JSX.Element {
     );
   }
 
-  console.log(isAuthenticated, 'App.tsx');
-
-  if (!true) {
-    return (
-      <PaperProvider theme={theme}>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Group>
-              <Stack.Screen
-                name={SCREENS.LOGIN.name}
-                component={SCREENS.LOGIN.component}
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name={SCREENS.SignUp.name}
-                component={SCREENS.SignUp.component}
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </Stack.Group>
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
-    );
-  }
+  // if (!true) {
+  //   return (
+  //     <PaperProvider theme={theme}>
+  //       <NavigationContainer>
+  //         <Stack.Navigator screenOptions={{headerShown: false}}>
+  //           <Stack.Group>
+  //             <Stack.Screen
+  //               name={SCREENS.LOGIN.name}
+  //               component={SCREENS.LOGIN.component}
+  //               options={{
+  //                 headerShown: false,
+  //               }}
+  //             />
+  //             <Stack.Screen
+  //               name={SCREENS.SignUp.name}
+  //               component={SCREENS.SignUp.component}
+  //               options={{
+  //                 headerShown: false,
+  //               }}
+  //             />
+  //           </Stack.Group>
+  //         </Stack.Navigator>
+  //       </NavigationContainer>
+  //     </PaperProvider>
+  //   );
+  // }
 
   return (
     <PaperProvider theme={theme}>
