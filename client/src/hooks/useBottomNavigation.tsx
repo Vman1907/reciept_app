@@ -1,6 +1,6 @@
 import React from 'react';
 import {HOME, RECEIPT, SEARCH, USER} from '../../assets/image';
-import Dashboard from '../screens/dashboard';
+import Dashboard from '../screens/home/dashboard';
 
 const pages = [
   {

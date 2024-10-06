@@ -1,41 +1,41 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {HOME} from '../../../assets/image';
+import {HOME, RECEIPT, SEARCH, USER} from '../../../assets/image';
+import Dashboard from '../../screens/home/dashboard';
+import ReceiptPage from '../../screens/home/receipt';
+import {COLORS} from '../../utils/const';
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomNavigation() {
+  const renderIcon = (routeName: string, color: string) => {
+    let iconName;
+
+    if (routeName === 'Home') {
+      iconName = <HOME stroke={color} />;
+    } else if (routeName === 'Receipt') {
+      iconName = <RECEIPT stroke={color} />;
+    } else if (routeName === 'Search') {
+      iconName = <SEARCH stroke={color} />;
+    } else if (routeName === 'Profile') {
+      iconName = <USER stroke={color} />;
+    }
+
+    return iconName;
+  };
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        tabBarIcon: ({focused, color, size}) => {
-          let iconName;
-
-          if (route.name === 'Home') {
-            iconName = focused
-              ? 'ios-information-circle'
-              : 'ios-information-circle-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'ios-list' : 'ios-list-outline';
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'ios-list' : 'ios-list-outline';
-          } else if (route.name === 'Search') {
-            iconName = focused ? 'ios-list' : 'ios-list-outline';
-          } else if (route.name === 'Receipt') {
-            iconName = focused ? 'ios-list' : 'ios-list-outline';
-          }
-
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+        tabBarIcon: ({color}) => renderIcon(route.name, color),
+        tabBarActiveTintColor: COLORS.PRIMARY,
+        tabBarInactiveTintColor: COLORS.TEXT_MUTED,
       })}>
-      <Tab.Screen name="Home" component={HOME} />
-      <Tab.Screen name="Receipt" component={HOME} />
-      <Tab.Screen name="Search" component={HOME} />
-      <Tab.Screen name="Profile" component={HOME} />
+      <Tab.Screen name="Home" component={Dashboard} />
+      <Tab.Screen name="Receipt" component={ReceiptPage} />
+      <Tab.Screen name="Search" component={SEARCH} />
+      <Tab.Screen name="Profile" component={USER} />
     </Tab.Navigator>
   );
 }

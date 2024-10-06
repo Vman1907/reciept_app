@@ -1,7 +1,3 @@
-import Home from '../screens/home';
-import Signin from '../screens/signin';
-import SignUp from '../screens/signup';
-
 export const SERVER_URL = process.env.SERVER_URL || 'http://localhost:5000/api';
 
 export const COLORS = {
@@ -11,16 +7,18 @@ export const COLORS = {
 };
 
 export const SCREENS = {
-  LOGIN: {
-    name: 'Login',
-    component: Signin,
-  },
-  SignUp: {
-    name: 'Signup',
-    component: SignUp,
-  },
-  HOME: {
-    name: 'Home',
-    component: Home,
-  },
+  LOGIN: 'Login',
+  SignUp: 'Signup',
+  HOME: 'Home',
+  FORM: 'Receipt_form',
 };
+
+export const PaymentMethods = ['Cash', 'Card', 'UPI', 'Net Banking', 'Others'];
+
+export const idTypes = [
+  'PAN Card',
+  'Aadhar Card',
+  'Passport',
+  'Driving License',
+  'Other',
+];

@@ -1,3 +1,5 @@
+export {default as CHEVRON_LEFT} from './svg/back';
+export {default as CHEVRON_DOWN} from './svg/down';
 export {default as EYE_CLOSE} from './svg/eye_close';
 export {default as EYE_OPEN} from './svg/eye_open';
 export {default as HOME} from './svg/home';

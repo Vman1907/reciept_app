@@ -7,6 +7,10 @@ import {PaperProvider, Text} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useAuth} from './hooks/useAuth';
 import useTheme from './hooks/useTheme';
+import Signin from './screens/auth/signin';
+import SignUp from './screens/auth/signup';
+import Home from './screens/home';
+import ReceiptForm from './screens/receiptForm';
 import {SCREENS} from './utils/const';
 
 const Stack = createNativeStackNavigator();
@@ -26,32 +30,32 @@ function App(): React.JSX.Element {
     );
   }
 
-  // if (!true) {
-  //   return (
-  //     <PaperProvider theme={theme}>
-  //       <NavigationContainer>
-  //         <Stack.Navigator screenOptions={{headerShown: false}}>
-  //           <Stack.Group>
-  //             <Stack.Screen
-  //               name={SCREENS.LOGIN.name}
-  //               component={SCREENS.LOGIN.component}
-  //               options={{
-  //                 headerShown: false,
-  //               }}
-  //             />
-  //             <Stack.Screen
-  //               name={SCREENS.SignUp.name}
-  //               component={SCREENS.SignUp.component}
-  //               options={{
-  //                 headerShown: false,
-  //               }}
-  //             />
-  //           </Stack.Group>
-  //         </Stack.Navigator>
-  //       </NavigationContainer>
-  //     </PaperProvider>
-  //   );
-  // }
+  if (!true) {
+    return (
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Group>
+              <Stack.Screen
+                name={SCREENS.LOGIN}
+                component={Signin}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name={SCREENS.SignUp}
+                component={SignUp}
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack.Group>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    );
+  }
 
   return (
     <PaperProvider theme={theme}>
@@ -59,8 +63,15 @@ function App(): React.JSX.Element {
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Group>
             <Stack.Screen
-              name={SCREENS.HOME.name}
-              component={SCREENS.HOME.component}
+              name={SCREENS.HOME}
+              component={Home}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name={SCREENS.FORM}
+              component={ReceiptForm}
               options={{
                 headerShown: false,
               }}

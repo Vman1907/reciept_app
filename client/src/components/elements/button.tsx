@@ -7,9 +7,9 @@ type Props = {} & ButtonProps;
 export default function Button({...props}: Props) {
   return (
     <BUTTON
-      {...props}
       mode={props.mode ?? 'contained'}
-      style={[styles.button, props.style]}>
+      style={[styles.button, props.style]}
+      {...props}>
       {props.children}
     </BUTTON>
   );
@@ -17,7 +17,7 @@ export default function Button({...props}: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    padding: 10,
+    padding: 5,
     borderRadius: 15,
   },
 });

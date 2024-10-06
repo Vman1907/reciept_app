@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {TextInput as TEXTINUPT} from 'react-native-paper';
+import {TextInputProps, TextInput as TEXTINUPT} from 'react-native-paper';
 import {EYE_CLOSE, EYE_OPEN} from '../../../assets/image';
 import {COLORS} from '../../utils/const';
 
@@ -8,19 +8,55 @@ export function TextInput({
   value,
   onChangeText,
   placeholder,
+  ...props
 }: {
   value: string;
   onChangeText: (text: string) => void;
   placeholder: string;
-}) {
+} & TextInputProps) {
   return (
     <View style={styles.inputContainer}>
       <TEXTINUPT
+        {...props}
         mode="outlined"
         outlineStyle={styles.outlineNone}
-        style={styles.container}
+        style={[styles.container, props.style]}
         placeholder={placeholder}
         onChangeText={onChangeText}
+        value={value}
+        placeholderTextColor={styles.placeholderColor.color}
+      />
+    </View>
+  );
+}
+
+export function NumberInput({
+  value,
+  onChangeText,
+  placeholder,
+  ...props
+}: {
+  value: string;
+  onChangeText: (text: string) => void;
+  placeholder: string;
+} & TextInputProps) {
+  const handleChange = (text: string) => {
+    if (isNaN(Number(text.trim()))) {
+      return;
+    }
+    onChangeText(text);
+  };
+
+  return (
+    <View style={styles.inputContainer}>
+      <TEXTINUPT
+        keyboardType="numeric"
+        {...props}
+        mode="outlined"
+        outlineStyle={styles.outlineNone}
+        style={[styles.container, props.style]}
+        placeholder={placeholder}
+        onChangeText={handleChange}
         value={value}
         placeholderTextColor={styles.placeholderColor.color}
       />
@@ -44,6 +80,7 @@ export const PasswordInput = ({
   return (
     <View style={styles.inputContainer}>
       <TEXTINUPT
+        keyboardType="visible-password"
         mode="outlined"
         outlineStyle={styles.outlineNone}
         style={styles.container}
@@ -93,6 +130,6 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_MUTED,
   },
   buttonContainer: {
-    paddingHorizontal: '2%',
+    paddingHorizontal: '21%',
   },
 });

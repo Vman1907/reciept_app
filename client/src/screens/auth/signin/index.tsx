@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Keyboard,
   SafeAreaView,
@@ -6,22 +6,25 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {PasswordInput, TextInput} from '../../components/elements/Input';
-import Button from '../../components/elements/button';
-import Text from '../../components/elements/text';
-import AuthService from '../../services/auth.service';
-import {SCREENS} from '../../utils/const';
+import {PasswordInput, TextInput} from '../../../components/elements/Input';
+import Button from '../../../components/elements/button';
+import Text from '../../../components/elements/text';
+import {useAuth} from '../../../hooks/useAuth';
+import AuthService from '../../../services/auth.service';
+import {SCREENS} from '../../../utils/const';
 
-export default function SignUp({navigation}: {navigation: any}) {
+export default function Signin({navigation}: {navigation: any}) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
+
   const [loading, setLoading] = React.useState(false);
 
   const [error, setError] = React.useState('');
 
-  const handleSignup = async () => {
-    if (!email || !password || !confirmPassword) {
+  const {setIsAuthenticated} = useAuth();
+
+  const handleLogin = async () => {
+    if (!email || !password) {
       setError('All fields are required');
       return;
     }
@@ -29,38 +32,41 @@ export default function SignUp({navigation}: {navigation: any}) {
       setError('Password must be at least 6 characters');
       return;
     }
-    if (password !== confirmPassword) {
-      setError('Password and confirm password do not match');
-      return;
-    }
     setError('');
     setLoading(true);
-    AuthService.signup(email, password)
+    AuthService.signin(email, password)
       .then(res => {
         if (!res) {
-          setError('Signup failed');
+          setError('Login failed');
           return;
         }
+        setIsAuthenticated(true);
       })
       .catch(err => {
         console.log(err);
         setError('Something went wrong, please try again');
+        setIsAuthenticated(true);
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
-  const openSigninPage = () => {
-    navigation.navigate(SCREENS.LOGIN.name);
+  const openSignupPage = () => {
+    navigation.replace(SCREENS.SignUp.name);
   };
+
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+  }, []);
 
   return (
     <SafeAreaView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <View>
-            <Text style={styles.heading}>SignUp</Text>
+            <Text style={styles.heading}>Login</Text>
             <View style={styles.inputContainer}>
               <TextInput
                 value={email}
@@ -72,23 +78,18 @@ export default function SignUp({navigation}: {navigation: any}) {
                 onChangeText={setPassword}
                 placeholder="Password"
               />
-              <PasswordInput
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                placeholder="Confirm Password"
-              />
             </View>
             <View>
               {error && <Text style={styles.errorText}>{error}</Text>}
             </View>
-            <Button onPress={handleSignup} loading={loading}>
-              <Text style={styles.loginText}>Create Account</Text>
+            <Button loading={loading} onPress={handleLogin}>
+              <Text style={styles.loginText}>Login</Text>
             </Button>
           </View>
           <View style={styles.signUpTextContainer}>
-            <Text style={styles.signUpText}>Already have an account?</Text>
-            <Text onPress={openSigninPage} style={styles.signUpText}>
-              Login
+            <Text style={styles.signUpText}>Don't have an account?</Text>
+            <Text onPress={openSignupPage} style={styles.signUpText}>
+              Sign Up
             </Text>
           </View>
         </View>
@@ -132,6 +133,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: '5%',
+  },
+  signUpButton: {
+    padding: 0,
+    margin: 0,
   },
   errorText: {
     color: 'red',

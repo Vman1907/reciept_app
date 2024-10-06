@@ -1,5 +1,4 @@
 import axios from 'axios';
-import AuthService from '../services/auth.service';
 import {SERVER_URL} from './const';
 
 const api = axios.create({
@@ -29,7 +28,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await AuthService.refreshAccessToken();
+        // await AuthService.refreshAccessToken();
         return api(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);

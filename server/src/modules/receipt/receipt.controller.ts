@@ -39,7 +39,7 @@ export const getReceipts = async (req: Request, res: Response): Promise<void> =>
 			: {};
 
 		const receipts = await Receipt.findAll({ where: whereCondition });
-		Respond({ res, status: 200, data: receipts });
+		Respond({ res, status: 200, data: { receipts } });
 		return;
 	} catch (error) {
 		console.log(error);
