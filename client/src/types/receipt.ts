@@ -7,7 +7,7 @@ export type Receipt = {
   city: string;
   amount: number;
   paymentMethod: 'UPI' | 'Netbanking' | 'Card' | 'Cash' | 'Other';
-  referenceNumber?: string;
+  referenceNumber: string;
   idType: 'PAN Card' | 'Aadhar Card' | 'Passport' | 'Driving License' | 'Other';
   idNumber: string;
   receiptNumber: number;

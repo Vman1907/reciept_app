@@ -40,111 +40,6 @@ const DUMMY_DATA: Receipt[] = [
     receiptNumber: 2,
     createdAt: '2024-10-06T06:34:44.600Z',
   },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
 ];
 
 export default function Dashboard({navigation}: {navigation: any}) {
@@ -160,7 +55,6 @@ export default function Dashboard({navigation}: {navigation: any}) {
         <View style={style.buttonContainer}>
           <Button
             onPress={() => nav.navigate(SCREENS.FORM as never)}
-            contentStyle={style.buttonContent}
             style={style.button}>
             <Text fontWeight="bold" style={style.buttonText}>
               Create New
@@ -181,7 +75,7 @@ export default function Dashboard({navigation}: {navigation: any}) {
           </Text>
           <FlatList
             style={style.scrollComponent}
-            data={[...DUMMY_DATA, ...DUMMY_DATA]}
+            data={DUMMY_DATA}
             renderItem={receipt => <ReceiptListItem receipt={receipt.item} />}
           />
         </View>
@@ -205,14 +99,11 @@ const style = StyleSheet.create({
   },
   button: {
     flex: 1,
+    padding: 5,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
-  },
-  buttonContent: {
-    padding: 0,
-    margin: 0,
   },
   secondaryButton: {
     backgroundColor: COLORS.SECONDARY,

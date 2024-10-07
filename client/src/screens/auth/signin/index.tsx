@@ -6,10 +6,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import {useAuth} from '../../../components/context/authProvider';
 import {PasswordInput, TextInput} from '../../../components/elements/Input';
 import Button from '../../../components/elements/button';
 import Text from '../../../components/elements/text';
-import {useAuth} from '../../../hooks/useAuth';
 import AuthService from '../../../services/auth.service';
 import {SCREENS} from '../../../utils/const';
 
@@ -21,7 +21,20 @@ export default function Signin({navigation}: {navigation: any}) {
 
   const [error, setError] = React.useState('');
 
-  const {setIsAuthenticated} = useAuth();
+  const {setAuth, isAuthenticating, isAuthenticated} = useAuth();
+
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+  }, []);
+
+  if (isAuthenticating) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (isAuthenticated) {
+    navigation.navigate(SCREENS.HOME);
+  }
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -40,12 +53,12 @@ export default function Signin({navigation}: {navigation: any}) {
           setError('Login failed');
           return;
         }
-        setIsAuthenticated(true);
+        setAuth(true);
       })
       .catch(err => {
         console.log(err);
         setError('Something went wrong, please try again');
-        setIsAuthenticated(true);
+        setAuth(true);
       })
       .finally(() => {
         setLoading(false);
@@ -53,13 +66,8 @@ export default function Signin({navigation}: {navigation: any}) {
   };
 
   const openSignupPage = () => {
-    navigation.replace(SCREENS.SignUp.name);
+    navigation.navigate(SCREENS.SIGNUP);
   };
-
-  useEffect(() => {
-    setEmail('');
-    setPassword('');
-  }, []);
 
   return (
     <SafeAreaView>

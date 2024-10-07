@@ -52,7 +52,7 @@ export default function SignUp({navigation}: {navigation: any}) {
   };
 
   const openSigninPage = () => {
-    navigation.navigate(SCREENS.LOGIN.name);
+    navigation.navigate(SCREENS.LOGIN);
   };
 
   return (

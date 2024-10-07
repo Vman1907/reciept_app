@@ -25,6 +25,7 @@ const style = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start',
     paddingTop: '5%',
   },
   headerText: {

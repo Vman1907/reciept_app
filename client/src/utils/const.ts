@@ -1,4 +1,5 @@
-export const SERVER_URL = process.env.SERVER_URL || 'http://localhost:5000/api';
+export const SERVER_URL =
+  process.env.SERVER_URL || 'http://192.168.29.189:5000/api';
 
 export const COLORS = {
   PRIMARY: '#1C1B1F',
@@ -8,7 +9,7 @@ export const COLORS = {
 
 export const SCREENS = {
   LOGIN: 'Login',
-  SignUp: 'Signup',
+  SIGNUP: 'Signup',
   HOME: 'Home',
   FORM: 'Receipt_form',
 };

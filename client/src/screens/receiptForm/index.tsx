@@ -13,6 +13,14 @@ import {idTypes, PaymentMethods} from '../../utils/const';
 export default function ReceiptForm() {
   const navigation = useNavigation();
 
+  const [error, setError] = React.useState<{
+    field: keyof Omit<Receipt, 'createdAt'> | '';
+    message: string;
+  }>({
+    field: '',
+    message: '',
+  });
+
   const [details, setDetails] = React.useState<Omit<Receipt, 'createdAt'>>({
     address: '',
     amount: 0,
@@ -37,12 +45,64 @@ export default function ReceiptForm() {
     value: string | number,
   ) => {
     if (type === 'mobile') {
+      if (value.toString().trim().length > 10) {
+        return;
+      }
     }
     setDetails(prev => {
       return {
         ...prev,
         [type]: value,
       };
+    });
+  };
+
+  const handleSubmit = () => {
+    if (details.name.trim().length < 3) {
+      setError({
+        field: 'name',
+        message: 'Name should be at least 3 characters long',
+      });
+      return;
+    }
+    if (details.mobile.trim().length < 10) {
+      setError({
+        field: 'mobile',
+        message: 'Mobile number should be atleast 10 characters long',
+      });
+      return;
+    }
+    if (details.address.trim().length < 1) {
+      setError({
+        field: 'address',
+        message: 'Address cannot be empty',
+      });
+      return;
+    }
+    if (details.amount <= 0) {
+      setError({
+        field: 'amount',
+        message: 'Amount should be greater than 0',
+      });
+      return;
+    }
+    if (details.referenceNumber.trim().length < 3) {
+      setError({
+        field: 'referenceNumber',
+        message: 'Reference number should be atleast 3 characters long',
+      });
+      return;
+    }
+    if (details.idNumber.trim().length < 3) {
+      setError({
+        field: 'idNumber',
+        message: 'ID number should be atleast 3 characters long',
+      });
+      return;
+    }
+    setError({
+      field: '',
+      message: '',
     });
   };
 
@@ -63,6 +123,9 @@ export default function ReceiptForm() {
               onChangeText={value => handleChange('name', value)}
               placeholder="eg. John Doe"
             />
+            {error.field === 'name' && (
+              <Text style={styles.error}>{error.message}</Text>
+            )}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label} fontWeight="bold">
@@ -73,16 +136,22 @@ export default function ReceiptForm() {
               onChangeText={value => handleChange('mobile', value)}
               placeholder="eg. 98XXXXXX43"
             />
+            {error.field === 'mobile' && (
+              <Text style={styles.error}>{error.message}</Text>
+            )}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label} fontWeight="bold">
               Address
             </Text>
-            <NumberInput
+            <TextInput
               value={details.address}
               onChangeText={value => handleChange('address', value)}
               placeholder="eg. Gandhinagar, Near NH-4, Mumbai"
             />
+            {error.field === 'address' && (
+              <Text style={styles.error}>{error.message}</Text>
+            )}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label} fontWeight="bold">
@@ -103,6 +172,9 @@ export default function ReceiptForm() {
               onChangeText={value => handleChange('amount', value)}
               placeholder="eg. 4000"
             />
+            {error.field === 'amount' && (
+              <Text style={styles.error}>{error.message}</Text>
+            )}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label} fontWeight="bold">
@@ -113,6 +185,9 @@ export default function ReceiptForm() {
               onChangeText={value => handleChange('referenceNumber', value)}
               placeholder="eg. 4000"
             />
+            {error.field === 'referenceNumber' && (
+              <Text style={styles.error}>{error.message}</Text>
+            )}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label} fontWeight="bold">
@@ -133,9 +208,12 @@ export default function ReceiptForm() {
               onChangeText={value => handleChange('idNumber', value)}
               placeholder="eg. 1234124124"
             />
+            {error.field === 'idNumber' && (
+              <Text style={styles.error}>{error.message}</Text>
+            )}
           </View>
-          <Button>
-            <Text>Generate Receipt</Text>
+          <Button onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Generate Receipt</Text>
           </Button>
         </ScrollView>
       </View>
@@ -162,5 +240,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 5,
     marginBottom: 10,
+  },
+  submitButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  error: {
+    color: 'red',
+    fontSize: 16,
   },
 });

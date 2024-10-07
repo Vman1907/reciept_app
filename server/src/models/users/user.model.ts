@@ -7,7 +7,7 @@ interface UserCreationAttributes extends IUser {}
 
 export class User extends Model<IUser, UserCreationAttributes> implements IUser {
 	public id!: number;
-	public username!: string;
+	public email!: string;
 	public password!: string;
 }
 
@@ -18,7 +18,7 @@ User.init(
 			autoIncrement: true,
 			primaryKey: true,
 		},
-		username: {
+		email: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			unique: true,

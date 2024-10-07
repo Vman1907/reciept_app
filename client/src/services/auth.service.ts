@@ -9,7 +9,8 @@ export default class AuthService {
 
   static async signin(email: string, password: string) {
     const {data} = await api.post('/auth/signin', {email, password});
-    return data.success;
+    console.log(data);
+    return true;
   }
 
   static async signOut() {

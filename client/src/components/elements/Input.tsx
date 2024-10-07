@@ -80,7 +80,7 @@ export const PasswordInput = ({
   return (
     <View style={styles.inputContainer}>
       <TEXTINUPT
-        keyboardType="visible-password"
+        keyboardType={show ? 'visible-password' : 'default'}
         mode="outlined"
         outlineStyle={styles.outlineNone}
         style={styles.container}
