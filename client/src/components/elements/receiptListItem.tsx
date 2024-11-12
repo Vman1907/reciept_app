@@ -19,7 +19,7 @@ export default function ReceiptListItem({
           {receipt.name}
         </Text>
         <Text style={styles.description}>
-          Last receipt generated at {DateHelper(receipt.createdAt)}
+          Receipt generated at {DateHelper(receipt.createdAt)}
         </Text>
       </View>
     </TouchableNativeFeedback>

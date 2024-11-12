@@ -11,7 +11,7 @@ export default function BottomNavigation() {
   const renderIcon = (routeName: string, color: string) => {
     let iconName;
 
-    if (routeName === 'Home') {
+    if (routeName === 'Dashboard') {
       iconName = <HOME stroke={color} />;
     } else if (routeName === 'Receipt') {
       iconName = <RECEIPT stroke={color} />;
@@ -32,7 +32,7 @@ export default function BottomNavigation() {
         tabBarActiveTintColor: COLORS.PRIMARY,
         tabBarInactiveTintColor: COLORS.TEXT_MUTED,
       })}>
-      <Tab.Screen name="Home" component={Dashboard} />
+      <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="Receipt" component={ReceiptPage} />
       <Tab.Screen name="Search" component={SEARCH} />
       <Tab.Screen name="Profile" component={USER} />

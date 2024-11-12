@@ -19,8 +19,8 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
   useEffect(() => {
     const checkAuthStatus = async () => {
       setIsAuthenticating(true);
-      const {session_active} = await AuthService.validateAuth();
-      setIsAuthenticated(session_active);
+      const res = await AuthService.validateAuth();
+      setIsAuthenticated(res);
       setIsAuthenticating(false);
     };
     checkAuthStatus();

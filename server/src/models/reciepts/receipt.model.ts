@@ -3,8 +3,9 @@ import { sequelize } from '../../config/db.config';
 import { IReceipt } from './receipt.interface';
 interface ReceiptCreationAttributes extends Optional<IReceipt, 'id' | 'referenceNumber'> {}
 export class Receipt extends Model<IReceipt, ReceiptCreationAttributes> implements IReceipt {
-	public id!: number;
-	public date!: string;
+	public user_id!: number;
+	public id!: string;
+	public date!: Date;
 	public name!: string;
 	public mobile!: string;
 	public address!: string;
@@ -23,9 +24,13 @@ export class Receipt extends Model<IReceipt, ReceiptCreationAttributes> implemen
 Receipt.init(
 	{
 		id: {
-			type: DataTypes.INTEGER.UNSIGNED,
-			autoIncrement: true,
+			type: DataTypes.STRING,
 			primaryKey: true,
+			unique: true,
+		},
+		user_id: {
+			type: DataTypes.STRING,
+			allowNull: false,
 		},
 		date: {
 			type: DataTypes.DATEONLY,

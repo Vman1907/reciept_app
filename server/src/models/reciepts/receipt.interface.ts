@@ -1,6 +1,7 @@
 export interface IReceipt {
-	id?: number;
-	date: string;
+	user_id: number;
+	id: string;
+	date: Date;
 	name: string;
 	mobile: string;
 	address: string;

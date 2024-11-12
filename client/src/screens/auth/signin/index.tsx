@@ -28,14 +28,6 @@ export default function Signin({navigation}: {navigation: any}) {
     setPassword('');
   }, []);
 
-  if (isAuthenticating) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (isAuthenticated) {
-    navigation.navigate(SCREENS.HOME);
-  }
-
   const handleLogin = async () => {
     if (!email || !password) {
       setError('All fields are required');
@@ -68,42 +60,50 @@ export default function Signin({navigation}: {navigation: any}) {
   const openSignupPage = () => {
     navigation.navigate(SCREENS.SIGNUP);
   };
+  if (isAuthenticating) {
+    return <Text>Loading...</Text>;
+  }
 
-  return (
-    <SafeAreaView>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <View>
-            <Text style={styles.heading}>Login</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Email"
-              />
-              <PasswordInput
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Password"
-              />
-            </View>
+  if (isAuthenticated) {
+    navigation.navigate(SCREENS.HOME);
+    return null;
+  } else {
+    return (
+      <SafeAreaView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
             <View>
-              {error && <Text style={styles.errorText}>{error}</Text>}
+              <Text style={styles.heading}>Login</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="Email"
+                />
+                <PasswordInput
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Password"
+                />
+              </View>
+              <View>
+                {error && <Text style={styles.errorText}>{error}</Text>}
+              </View>
+              <Button loading={loading} onPress={handleLogin}>
+                <Text style={styles.loginText}>Login</Text>
+              </Button>
             </View>
-            <Button loading={loading} onPress={handleLogin}>
-              <Text style={styles.loginText}>Login</Text>
-            </Button>
+            <View style={styles.signUpTextContainer}>
+              <Text style={styles.signUpText}>Don't have an account?</Text>
+              <Text onPress={openSignupPage} style={styles.signUpText}>
+                Sign Up
+              </Text>
+            </View>
           </View>
-          <View style={styles.signUpTextContainer}>
-            <Text style={styles.signUpText}>Don't have an account?</Text>
-            <Text onPress={openSignupPage} style={styles.signUpText}>
-              Sign Up
-            </Text>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
-  );
+        </TouchableWithoutFeedback>
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

@@ -31,12 +31,12 @@ export default function DropDown({
           <CHEVRON_DOWN style={visible ? style.down : null} />
         </View>
       </TouchableRipple>
-      {items.map(method => {
+      {items.map((method, index) => {
         if (method === _value) {
           return;
         }
         return (
-          <TouchableRipple onPress={() => closeMenu(method)}>
+          <TouchableRipple key={index} onPress={() => closeMenu(method)}>
             <View style={style.itemContainer}>
               <Text style={style.text}>{method}</Text>
             </View>

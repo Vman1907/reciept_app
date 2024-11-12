@@ -1,5 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Button from '../../components/elements/button';
@@ -7,12 +6,18 @@ import DropDown from '../../components/elements/dropdown';
 import {NumberInput, TextInput} from '../../components/elements/Input';
 import PageHeader from '../../components/elements/pageHeader';
 import Text from '../../components/elements/text';
+import ReceiptService from '../../services/receipts.service';
 import {Receipt} from '../../types/receipt';
-import {idTypes, PaymentMethods} from '../../utils/const';
+import {idTypes, PaymentMethods, SCREENS} from '../../utils/const';
+import {parseToObject} from '../../utils/JSONhelper';
 
-export default function ReceiptForm() {
-  const navigation = useNavigation();
-
+export default function ReceiptForm({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) {
   const [error, setError] = React.useState<{
     field: keyof Omit<Receipt, 'createdAt'> | '';
     message: string;
@@ -21,12 +26,16 @@ export default function ReceiptForm() {
     message: '',
   });
 
+  const {receipt: _receipt} = route.params;
+
+  const [loading, setLoading] = React.useState<boolean>(false);
+
   const [details, setDetails] = React.useState<Omit<Receipt, 'createdAt'>>({
     address: '',
     amount: 0,
     city: '',
     date: '',
-    id: 0,
+    id: '',
     idNumber: '',
     idType: 'Aadhar Card',
     mobile: '',
@@ -57,7 +66,7 @@ export default function ReceiptForm() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (details.name.trim().length < 3) {
       setError({
         field: 'name',
@@ -104,7 +113,53 @@ export default function ReceiptForm() {
       field: '',
       message: '',
     });
+
+    setLoading(true);
+
+    if (details.id) {
+      ReceiptService.updateReceipt(details)
+        .then(res => {
+          if (res) {
+            navigation.navigate(SCREENS.HOME);
+          }
+        })
+        .catch(err => {
+          setError({
+            field: 'name',
+            message: 'Failed to update receipt',
+          });
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      return;
+    }
+
+    ReceiptService.createReceipt(details)
+      .then(res => {
+        if (res) {
+          navigation.navigate(SCREENS.HOME as never);
+        }
+      })
+      .catch(err => {
+        setError({
+          field: 'name',
+          message: 'Failed to create receipt',
+        });
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
+
+  useEffect(() => {
+    if (_receipt) {
+      const receipt = parseToObject(_receipt);
+      setDetails(receipt as Omit<Receipt, 'createdAt'>);
+    }
+  }, [_receipt]);
 
   return (
     <SafeAreaView>
@@ -212,8 +267,10 @@ export default function ReceiptForm() {
               <Text style={styles.error}>{error.message}</Text>
             )}
           </View>
-          <Button onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Generate Receipt</Text>
+          <Button loading={loading} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>
+              {details.id ? 'Save' : 'Generate'} receipt
+            </Text>
           </Button>
         </ScrollView>
       </View>
@@ -224,13 +281,13 @@ export default function ReceiptForm() {
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    paddingHorizontal: '5%',
     height: '100%',
     backgroundColor: 'white',
     paddingVertical: '2%',
   },
   formContainer: {
     marginTop: 10,
+    paddingHorizontal: '5%',
   },
   label: {
     fontSize: 16,

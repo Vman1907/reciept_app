@@ -6,7 +6,7 @@ import { IUser } from './user.interface';
 interface UserCreationAttributes extends IUser {}
 
 export class User extends Model<IUser, UserCreationAttributes> implements IUser {
-	public id!: number;
+	public id!: string;
 	public email!: string;
 	public password!: string;
 }
@@ -14,9 +14,9 @@ export class User extends Model<IUser, UserCreationAttributes> implements IUser 
 User.init(
 	{
 		id: {
-			type: DataTypes.INTEGER,
-			autoIncrement: true,
+			type: DataTypes.STRING,
 			primaryKey: true,
+			unique: true,
 		},
 		email: {
 			type: DataTypes.STRING,
@@ -31,6 +31,6 @@ User.init(
 	{
 		sequelize,
 		tableName: 'users',
-		timestamps: false,
+		timestamps: true,
 	}
 );

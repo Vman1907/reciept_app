@@ -1,155 +1,42 @@
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {TextInput} from '../../../components/elements/Input';
 import PageHeader from '../../../components/elements/pageHeader';
 import ReceiptListItem from '../../../components/elements/receiptListItem';
+import Text from '../../../components/elements/text';
+import UserService from '../../../services/user.service';
 import {Receipt} from '../../../types/receipt';
 import {COLORS, SCREENS} from '../../../utils/const';
 
-const DUMMY_DATA: Receipt[] = [
-  {
-    id: 1,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12344',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 1,
-    createdAt: '2024-10-06T06:33:48.575Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-];
-
-export default function ReceiptPage() {
+export default function ReceiptPage({navigation}: {navigation: any}) {
   const [search, setSearch] = React.useState('');
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
+
+  const [receipts, setReceipts] = React.useState<Receipt[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    setLoading(true);
+    UserService.getAllReceipts()
+      .then(res => {
+        setReceipts(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const filtered = receipts.filter(receipt => {
+    return (
+      receipt.name.toLowerCase().includes(search.toLowerCase()) ||
+      receipt.mobile.toLowerCase().includes(search.toLowerCase())
+    );
+  });
 
   return (
     <SafeAreaView>
@@ -165,21 +52,27 @@ export default function ReceiptPage() {
             style={style.input}
           />
         </View>
-
-        <View style={style.scrollContainer}>
-          <FlatList
-            style={style.scrollComponent}
-            data={[...DUMMY_DATA, ...DUMMY_DATA]}
-            renderItem={receipt => (
-              <ReceiptListItem
-                onPress={() => navigation.navigate(SCREENS.FORM as never)}
-                receipt={receipt.item}
-              />
-            )}
-          />
-        </View>
+        {loading ? (
+          <Text>Loading...</Text>
+        ) : (
+          <View style={style.scrollContainer}>
+            <FlatList
+              style={style.scrollComponent}
+              data={filtered}
+              renderItem={receipt => (
+                <ReceiptListItem
+                  onPress={() =>
+                    navigation.navigate(SCREENS.FORM, {
+                      receipt: JSON.stringify(receipt.item),
+                    })
+                  }
+                  receipt={receipt.item}
+                />
+              )}
+            />
+          </View>
+        )}
       </View>
-      {/* </TouchableWithoutFeedback> */}
     </SafeAreaView>
   );
 }

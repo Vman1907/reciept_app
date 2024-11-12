@@ -1,5 +1,5 @@
 export type Receipt = {
-  id: number;
+  id: string;
   date: string;
   name: string;
   mobile: string;

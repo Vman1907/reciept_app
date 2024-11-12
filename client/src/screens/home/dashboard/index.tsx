@@ -1,49 +1,34 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Button from '../../../components/elements/button';
 import PageHeader from '../../../components/elements/pageHeader';
 import ReceiptListItem from '../../../components/elements/receiptListItem';
 import Text from '../../../components/elements/text';
+import UserService from '../../../services/user.service';
 import {Receipt} from '../../../types/receipt';
 import {COLORS, SCREENS} from '../../../utils/const';
 
-const DUMMY_DATA: Receipt[] = [
-  {
-    id: 1,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12344',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 1,
-    createdAt: '2024-10-06T06:33:48.575Z',
-  },
-  {
-    id: 2,
-    date: '2022-01-01',
-    name: 'John Doe',
-    mobile: '1234567890',
-    address: '123, Lorem Ipsum',
-    city: 'City',
-    amount: 1000,
-    paymentMethod: 'Cash',
-    referenceNumber: 'ADHR-12342',
-    idType: 'PAN Card',
-    idNumber: 'ABCDE1234F',
-    receiptNumber: 2,
-    createdAt: '2024-10-06T06:34:44.600Z',
-  },
-];
-
 export default function Dashboard({navigation}: {navigation: any}) {
   const nav = useNavigation();
+
+  const [receipts, setReceipts] = React.useState<Receipt[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    setLoading(true);
+    UserService.getAllReceipts()
+      .then(res => {
+        setReceipts(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [navigation]);
 
   return (
     <SafeAreaView>
@@ -73,11 +58,15 @@ export default function Dashboard({navigation}: {navigation: any}) {
           <Text style={style.heading} fontWeight="bold">
             Your recent Activity:
           </Text>
-          <FlatList
-            style={style.scrollComponent}
-            data={DUMMY_DATA}
-            renderItem={receipt => <ReceiptListItem receipt={receipt.item} />}
-          />
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <FlatList
+              style={style.scrollComponent}
+              data={receipts}
+              renderItem={receipt => <ReceiptListItem receipt={receipt.item} />}
+            />
+          )}
         </View>
       </View>
     </SafeAreaView>

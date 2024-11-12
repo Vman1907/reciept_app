@@ -41,6 +41,7 @@ export default function SignUp({navigation}: {navigation: any}) {
           setError('Signup failed');
           return;
         }
+        openSigninPage()
       })
       .catch(err => {
         console.log(err);

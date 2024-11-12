@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { Request, Response } from 'express';
 import * as fs from 'fs';
 import { Op } from 'sequelize';
@@ -11,13 +12,16 @@ export const createReceipt = async (req: Request, res: Response): Promise<void> 
 		const receiptData = req.body as createReceiptValidator;
 		const lastReceipt = await Receipt.findOne({ order: [['receiptNumber', 'DESC']] });
 		const receiptNumber = lastReceipt ? lastReceipt.receiptNumber + 1 : 1;
-
+		console.log(receiptData, (req as any).user.userId);
 		const newReceipt = await Receipt.create({
 			...receiptData,
+			user_id: (req as any).user.userId,
 			receiptNumber,
+			id: crypto.randomUUID(),
+			date: new Date(),
 		});
 
-		Respond({ res, status: 201, data: newReceipt });
+		res.status(201).json({ receipt: newReceipt, success: true });
 		return;
 	} catch (error) {
 		console.log(error);
@@ -44,7 +48,6 @@ export const getReceipts = async (req: Request, res: Response): Promise<void> =>
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ error: 'Failed to fetch receipts' });
-		return; // No need to return
 	}
 };
 
