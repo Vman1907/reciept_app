@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableNativeFeedback, View} from 'react-native';
-import {Receipt} from '../../types/receipt';
+import {Receipt} from '../../store/types/ReceiptState';
 import {COLORS} from '../../utils/const';
 import {DateHelper} from '../../utils/dateHelper';
 import Text from './text';
@@ -10,7 +10,7 @@ export default function ReceiptListItem({
   onPress,
 }: {
   receipt: Receipt;
-  onPress?: () => void;
+  onPress: () => void;
 }) {
   return (
     <TouchableNativeFeedback onPress={onPress}>

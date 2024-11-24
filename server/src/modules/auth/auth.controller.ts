@@ -46,14 +46,23 @@ export const signIn = async (req: Request, res: Response) => {
 		const accessToken = generateAccessToken(user.id.toString());
 		const refreshToken = generateRefreshToken(user.id.toString());
 
-		await Session.create({
-			id: crypto.randomUUID(),
-			user_id: user.id,
-			expiresAt: new Date(Date.now() + 1000 * 60 * 15),
-			loginAt: new Date(),
-			createdAt: new Date(),
-			updatedAt: new Date(),
-		});
+		const userSession = await Session.findOne({ where: { user_id: user.id } });
+
+		if (!userSession) {
+			await Session.create({
+				id: crypto.randomUUID(),
+				user_id: user.id,
+				expiresAt: new Date(Date.now() + 1000 * 60 * 60),
+				loginAt: new Date(),
+				createdAt: new Date(),
+				updatedAt: new Date(),
+			});
+		} else {
+			await Session.update(
+				{ expiresAt: new Date(Date.now() + 1000 * 60 * 60) },
+				{ where: { user_id: user.id } }
+			);
+		}
 
 		res.status(200).json({
 			message: 'Logged in successfully',

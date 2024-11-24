@@ -51,6 +51,24 @@ export const getReceipts = async (req: Request, res: Response): Promise<void> =>
 	}
 };
 
+export const getDashboardData = async (req: Request, res: Response): Promise<void> => {
+	try {
+		const receipts = await Receipt.findAll({ where: { user_id: (req as any).user.userId } });
+		const sortedReceipts = receipts.sort((a, b) => {
+			return a.date.getTime() - b.date.getTime();
+		});
+		const topSixReceipts = sortedReceipts.slice(0, 6);
+		Respond({
+			res,
+			status: 200,
+			data: topSixReceipts,
+		});
+	} catch (error) {
+		res.status(500).json({ error: 'Failed to fetch receipts' });
+		return;
+	}
+};
+
 export const updateReceipt = async (req: Request, res: Response): Promise<void> => {
 	try {
 		const { id } = req.params;

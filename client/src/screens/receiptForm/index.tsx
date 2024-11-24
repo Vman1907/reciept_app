@@ -1,23 +1,35 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useDispatch, useSelector} from 'react-redux';
 import Button from '../../components/elements/button';
 import DropDown from '../../components/elements/dropdown';
 import {NumberInput, TextInput} from '../../components/elements/Input';
 import PageHeader from '../../components/elements/pageHeader';
 import Text from '../../components/elements/text';
 import ReceiptService from '../../services/receipts.service';
-import {Receipt} from '../../types/receipt';
+import {StoreNames, StoreState} from '../../store';
+import {
+  setReceiptAddress,
+  setReceiptAmount,
+  setReceiptIdNumber,
+  setReceiptIdType,
+  setReceiptMobile,
+  setReceiptName,
+  setReceiptPaymentMethod,
+  setReceiptReferenceNumber,
+} from '../../store/reducers/ReceiptReducer';
+import {Receipt} from '../../store/types/ReceiptState';
 import {idTypes, PaymentMethods, SCREENS} from '../../utils/const';
-import {parseToObject} from '../../utils/JSONhelper';
+import { AxiosError } from 'axios';
 
 export default function ReceiptForm({
   navigation,
-  route,
 }: {
   navigation: any;
   route: any;
 }) {
+  const dispatch = useDispatch();
   const [error, setError] = React.useState<{
     field: keyof Omit<Receipt, 'createdAt'> | '';
     message: string;
@@ -26,44 +38,14 @@ export default function ReceiptForm({
     message: '',
   });
 
-  const {receipt: _receipt} = route.params;
-
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const [details, setDetails] = React.useState<Omit<Receipt, 'createdAt'>>({
-    address: '',
-    amount: 0,
-    city: '',
-    date: '',
-    id: '',
-    idNumber: '',
-    idType: 'Aadhar Card',
-    mobile: '',
-    name: '',
-    paymentMethod: 'Card',
-    receiptNumber: 0,
-    referenceNumber: '',
-  });
+  const {details} = useSelector(
+    (state: StoreState) => state[StoreNames.RECEIPT],
+  );
 
   const handleNavigateBack = () => {
     navigation.goBack();
-  };
-
-  const handleChange = (
-    type: keyof Omit<Receipt, 'createdAt'>,
-    value: string | number,
-  ) => {
-    if (type === 'mobile') {
-      if (value.toString().trim().length > 10) {
-        return;
-      }
-    }
-    setDetails(prev => {
-      return {
-        ...prev,
-        [type]: value,
-      };
-    });
   };
 
   const handleSubmit = async () => {
@@ -128,7 +110,10 @@ export default function ReceiptForm({
             field: 'name',
             message: 'Failed to update receipt',
           });
-          console.log(err);
+          if ((err as AxiosError).response?.status === 401){
+            navigation.navigate(SCREENS.LOGIN as never);
+          }
+            console.log((err as AxiosError).response?.status);
         })
         .finally(() => {
           setLoading(false);
@@ -154,13 +139,6 @@ export default function ReceiptForm({
       });
   };
 
-  useEffect(() => {
-    if (_receipt) {
-      const receipt = parseToObject(_receipt);
-      setDetails(receipt as Omit<Receipt, 'createdAt'>);
-    }
-  }, [_receipt]);
-
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -175,7 +153,7 @@ export default function ReceiptForm({
             </Text>
             <TextInput
               value={details.name}
-              onChangeText={value => handleChange('name', value)}
+              onChangeText={value => dispatch(setReceiptName(value))}
               placeholder="eg. John Doe"
             />
             {error.field === 'name' && (
@@ -188,7 +166,7 @@ export default function ReceiptForm({
             </Text>
             <NumberInput
               value={details.mobile}
-              onChangeText={value => handleChange('mobile', value)}
+              onChangeText={value => dispatch(setReceiptMobile(value))}
               placeholder="eg. 98XXXXXX43"
             />
             {error.field === 'mobile' && (
@@ -201,7 +179,7 @@ export default function ReceiptForm({
             </Text>
             <TextInput
               value={details.address}
-              onChangeText={value => handleChange('address', value)}
+              onChangeText={value => dispatch(setReceiptAddress(value))}
               placeholder="eg. Gandhinagar, Near NH-4, Mumbai"
             />
             {error.field === 'address' && (
@@ -215,7 +193,13 @@ export default function ReceiptForm({
             <DropDown
               items={PaymentMethods}
               value={details.paymentMethod}
-              setValue={value => handleChange('paymentMethod', value)}
+              setValue={value =>
+                dispatch(
+                  setReceiptPaymentMethod(
+                    value as 'UPI' | 'Netbanking' | 'Card' | 'Cash' | 'Other',
+                  ),
+                )
+              }
             />
           </View>
           <View style={styles.inputContainer}>
@@ -224,7 +208,12 @@ export default function ReceiptForm({
             </Text>
             <NumberInput
               value={details.amount.toString()}
-              onChangeText={value => handleChange('amount', value)}
+              onChangeText={value => {
+                if (Number.isNaN(Number(value))) {
+                  return;
+                }
+                dispatch(setReceiptAmount(Number(value)));
+              }}
               placeholder="eg. 4000"
             />
             {error.field === 'amount' && (
@@ -237,7 +226,7 @@ export default function ReceiptForm({
             </Text>
             <TextInput
               value={details.referenceNumber ?? ''}
-              onChangeText={value => handleChange('referenceNumber', value)}
+              onChangeText={value => dispatch(setReceiptReferenceNumber(value))}
               placeholder="eg. 4000"
             />
             {error.field === 'referenceNumber' && (
@@ -251,7 +240,9 @@ export default function ReceiptForm({
             <DropDown
               items={idTypes}
               value={details.idType}
-              setValue={value => handleChange('idType', value)}
+              setValue={value =>
+                dispatch(setReceiptIdType(value as typeof details.idType))
+              }
             />
           </View>
           <View style={styles.inputContainer}>
@@ -260,7 +251,7 @@ export default function ReceiptForm({
             </Text>
             <TextInput
               value={details.idNumber ?? ''}
-              onChangeText={value => handleChange('idNumber', value)}
+              onChangeText={value => dispatch(setReceiptIdNumber(value))}
               placeholder="eg. 1234124124"
             />
             {error.field === 'idNumber' && (

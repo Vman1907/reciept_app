@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import AuthService from '../services/auth.service';
 import {SERVER_URL} from './const';
 
 const api = axios.create({
@@ -26,17 +25,20 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+      const refreshToken = await AsyncStorage.getItem('refresh-token');
+      if (!refreshToken) {
+        return Promise.reject(error);
+      }
       try {
-        const newAccessToken = await AuthService.refreshAccessToken();
-        if (newAccessToken) {
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          return api(originalRequest);
+        const {data} = await api.post('/auth/signout');
+        if (data.success) {
+          // Clear tokens from AsyncStorage
+          await AsyncStorage.removeItem('auth-token');
+          await AsyncStorage.removeItem('refresh-token');
         }
-      } catch (refreshError) {
-        // Handle refresh error, such as redirecting to login
+      } catch (err) {
         await AsyncStorage.removeItem('auth-token');
         await AsyncStorage.removeItem('refresh-token');
-        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);

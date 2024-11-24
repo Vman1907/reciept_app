@@ -1,3 +1,10 @@
+export type ReceiptState = {
+  list: Receipt[];
+  details: Receipt;
+  loading: boolean;
+  error: string;
+};
+
 export type Receipt = {
   id: string;
   date: string;

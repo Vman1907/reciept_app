@@ -4,7 +4,6 @@ import express from 'express';
 import { connectDB } from './config/db.config';
 import authRoutes from './modules/auth/auth.routes';
 import receiptRoutes from './modules/receipt/receipt.routes';
-import userRoutes from './modules/user/user.routes';
 
 const corsOptions = {
 	credentials: true,
@@ -17,7 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/receipts', receiptRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/dashboard', userRoutes);
 
 app.use('/api-status', (req, res) => {
 	res.json({ status: 'API is running' });

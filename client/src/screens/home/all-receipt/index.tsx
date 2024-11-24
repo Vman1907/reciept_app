@@ -1,35 +1,22 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useDispatch, useSelector} from 'react-redux';
 import {TextInput} from '../../../components/elements/Input';
 import PageHeader from '../../../components/elements/pageHeader';
 import ReceiptListItem from '../../../components/elements/receiptListItem';
 import Text from '../../../components/elements/text';
-import UserService from '../../../services/user.service';
-import {Receipt} from '../../../types/receipt';
+import {StoreNames, StoreState} from '../../../store';
+import {setReceiptDetails} from '../../../store/reducers/ReceiptReducer';
 import {COLORS, SCREENS} from '../../../utils/const';
 
 export default function ReceiptPage({navigation}: {navigation: any}) {
+  const dispatch = useDispatch();
   const [search, setSearch] = React.useState('');
 
-  // const navigation = useNavigation();
-
-  const [receipts, setReceipts] = React.useState<Receipt[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
-
-  useEffect(() => {
-    setLoading(true);
-    UserService.getAllReceipts()
-      .then(res => {
-        setReceipts(res);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  const {list: receipts, loading} = useSelector(
+    (state: StoreState) => state[StoreNames.RECEIPT],
+  );
 
   const filtered = receipts.filter(receipt => {
     return (
@@ -61,11 +48,10 @@ export default function ReceiptPage({navigation}: {navigation: any}) {
               data={filtered}
               renderItem={receipt => (
                 <ReceiptListItem
-                  onPress={() =>
-                    navigation.navigate(SCREENS.FORM, {
-                      receipt: JSON.stringify(receipt.item),
-                    })
-                  }
+                  onPress={() => {
+                    dispatch(setReceiptDetails(receipt.item));
+                    navigation.navigate(SCREENS.FORM);
+                  }}
                   receipt={receipt.item}
                 />
               )}

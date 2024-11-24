@@ -20,6 +20,9 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
     const checkAuthStatus = async () => {
       setIsAuthenticating(true);
       const res = await AuthService.validateAuth();
+      if (!res) {
+        setIsAuthenticating(false);
+      }
       setIsAuthenticated(res);
       setIsAuthenticating(false);
     };
@@ -28,7 +31,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
 
   const logout = async () => {
     setIsAuthenticating(true);
-    await AuthService.logout();
+    // await AuthService.logout();
     setIsAuthenticated(false);
     setIsAuthenticating(false);
   };

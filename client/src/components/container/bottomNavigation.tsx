@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {HOME, RECEIPT, SEARCH, USER} from '../../../assets/image';
 import Dashboard from '../../screens/home/dashboard';
-import ReceiptPage from '../../screens/home/receipt';
+import ReceiptPage from '../../screens/home/all-receipt';
 import {COLORS} from '../../utils/const';
 
 const Tab = createBottomTabNavigator();

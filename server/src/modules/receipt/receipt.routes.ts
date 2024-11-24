@@ -11,6 +11,7 @@ import {
 const router = express.Router();
 
 router.route('/').all(authenticate).get(getReceipts).post(createReceipt);
+router.route('/dashboard-data').all(authenticate).get(getReceipts)
 router.route('/:id').all(authenticate).put(updateReceipt).delete(deleteReceipt);
 router.route('/:id/download').all(authenticate).get(generateReceiptPDF);
 
