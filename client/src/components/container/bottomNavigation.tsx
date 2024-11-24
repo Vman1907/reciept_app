@@ -1,8 +1,9 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {HOME, RECEIPT, SEARCH, USER} from '../../../assets/image';
-import Dashboard from '../../screens/home/dashboard';
 import ReceiptPage from '../../screens/home/all-receipt';
+import Dashboard from '../../screens/home/dashboard';
+import Profile from '../../screens/home/profile';
 import {COLORS} from '../../utils/const';
 
 const Tab = createBottomTabNavigator();
@@ -35,7 +36,7 @@ export default function BottomNavigation() {
       <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="Receipt" component={ReceiptPage} />
       <Tab.Screen name="Search" component={SEARCH} />
-      <Tab.Screen name="Profile" component={USER} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 }

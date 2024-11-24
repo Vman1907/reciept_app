@@ -1,17 +1,17 @@
-import { AxiosError } from 'axios';
+import {AxiosError} from 'axios';
 import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
-import { EDIT, SHARE } from '../../../assets/image';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useDispatch, useSelector} from 'react-redux';
+import {EDIT, SHARE} from '../../../assets/image';
 import Button from '../../components/elements/button';
 import PageHeader from '../../components/elements/pageHeader';
 import Text from '../../components/elements/text';
 import ReceiptService from '../../services/receipts.service';
-import { StoreNames, StoreState } from '../../store';
-import { reset } from '../../store/reducers/ReceiptReducer';
-import { Receipt } from '../../store/types/ReceiptState';
-import { SCREENS } from '../../utils/const';
+import {StoreNames, StoreState} from '../../store';
+import {reset} from '../../store/reducers/ReceiptReducer';
+import {Receipt} from '../../store/types/ReceiptState';
+import {IdType, SCREENS} from '../../utils/const';
 
 export default function ViewForm({navigation}: {navigation: any; route: any}) {
   const dispatch = useDispatch();
@@ -34,53 +34,6 @@ export default function ViewForm({navigation}: {navigation: any; route: any}) {
   };
 
   const handleSubmit = async () => {
-    if (details.name.trim().length < 3) {
-      setError({
-        field: 'name',
-        message: 'Name should be at least 3 characters long',
-      });
-      return;
-    }
-    if (details.mobile.trim().length < 10) {
-      setError({
-        field: 'mobile',
-        message: 'Mobile number should be atleast 10 characters long',
-      });
-      return;
-    }
-    if (details.address.trim().length < 1) {
-      setError({
-        field: 'address',
-        message: 'Address cannot be empty',
-      });
-      return;
-    }
-    if (details.amount <= 0) {
-      setError({
-        field: 'amount',
-        message: 'Amount should be greater than 0',
-      });
-      return;
-    }
-    if (details.referenceNumber.trim().length < 3) {
-      setError({
-        field: 'referenceNumber',
-        message: 'Reference number should be atleast 3 characters long',
-      });
-      return;
-    }
-    if (details.idNumber.trim().length < 3) {
-      setError({
-        field: 'idNumber',
-        message: 'ID number should be atleast 3 characters long',
-      });
-      return;
-    }
-    setError({
-      field: '',
-      message: '',
-    });
-
     setLoading(true);
 
     if (details.id) {
@@ -144,23 +97,29 @@ export default function ViewForm({navigation}: {navigation: any; route: any}) {
             </TouchableOpacity>
           </View>
         </PageHeader>
-        <ScrollView style={styles.pageContainer}>
-          <Text style={styles.label} fontWeight="medium">
-            Receipt ID
-            <Text fontWeight="medium" style={styles.infoText}>
-              #{details.referenceNumber}
+        <View style={styles.pageContainer}>
+          <View style={styles.label}>
+            <Text fontWeight="medium">
+              Receipt ID
+              <Text fontWeight="medium" style={styles.infoText}>
+                #{details.referenceNumber}
+              </Text>
             </Text>
-          </Text>
-          <Text fontWeight='bold'>{details.idType}:{details.idNumber}</Text>
+            <Text fontWeight="bold">
+              ({IdType[details.idType]}-{details.idNumber})
+            </Text>
+          </View>
           <Text>Address: {details.address}</Text>
           <Text>Date: {details.date.split('-').reverse().join('/')}</Text>
           <Text>Customer Name: {details.name}</Text>
-          <Button loading={loading} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>
-              {details.id ? 'Save' : 'Generate'} receipt
-            </Text>
-          </Button>
-        </ScrollView>
+          <Text>Total Amount: ₹{details.amount}</Text>
+          <View style={styles.submitButton}>
+            <Text>{error.message}</Text>
+            <Button loading={loading} onPress={handleSubmit}>
+              <Text style={styles.submitButtonText}>Download receipt</Text>
+            </Button>
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -184,6 +143,7 @@ const styles = StyleSheet.create({
   pageContainer: {
     marginTop: 10,
     paddingHorizontal: '5%',
+    flexGrow: 1,
   },
   label: {
     fontSize: 22,
@@ -205,5 +165,9 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     fontSize: 16,
+  },
+  submitButton: {
+    marginTop: 'auto',
+    justifyContent: 'flex-end',
   },
 });

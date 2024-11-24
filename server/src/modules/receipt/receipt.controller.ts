@@ -12,7 +12,6 @@ export const createReceipt = async (req: Request, res: Response): Promise<void> 
 		const receiptData = req.body as createReceiptValidator;
 		const lastReceipt = await Receipt.findOne({ order: [['receiptNumber', 'DESC']] });
 		const receiptNumber = lastReceipt ? lastReceipt.receiptNumber + 1 : 1;
-		console.log(receiptData, (req as any).user.userId);
 		const newReceipt = await Receipt.create({
 			...receiptData,
 			user_id: (req as any).user.userId,
@@ -80,11 +79,11 @@ export const updateReceipt = async (req: Request, res: Response): Promise<void> 
 			return;
 		}
 
-		await receipt.update(updatedData);
+		const newReceipt = await receipt.update(updatedData);
 		Respond({
 			res,
 			status: 200,
-			data: receipt,
+			data: newReceipt.dataValues,
 		});
 		return;
 	} catch (error) {

@@ -1,3 +1,4 @@
+import {AxiosError} from 'axios';
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -10,6 +11,7 @@ import Text from '../../components/elements/text';
 import ReceiptService from '../../services/receipts.service';
 import {StoreNames, StoreState} from '../../store';
 import {
+  addReceipt,
   setReceiptAddress,
   setReceiptAmount,
   setReceiptIdNumber,
@@ -18,10 +20,10 @@ import {
   setReceiptName,
   setReceiptPaymentMethod,
   setReceiptReferenceNumber,
+  updateReceipt,
 } from '../../store/reducers/ReceiptReducer';
 import {Receipt} from '../../store/types/ReceiptState';
 import {idTypes, PaymentMethods, SCREENS} from '../../utils/const';
-import { AxiosError } from 'axios';
 
 export default function ReceiptForm({
   navigation,
@@ -102,6 +104,7 @@ export default function ReceiptForm({
       ReceiptService.updateReceipt(details)
         .then(res => {
           if (res) {
+            dispatch(updateReceipt(res));
             navigation.navigate(SCREENS.HOME);
           }
         })
@@ -110,10 +113,9 @@ export default function ReceiptForm({
             field: 'name',
             message: 'Failed to update receipt',
           });
-          if ((err as AxiosError).response?.status === 401){
+          if ((err as AxiosError).response?.status === 401) {
             navigation.navigate(SCREENS.LOGIN as never);
           }
-            console.log((err as AxiosError).response?.status);
         })
         .finally(() => {
           setLoading(false);
@@ -124,6 +126,7 @@ export default function ReceiptForm({
     ReceiptService.createReceipt(details)
       .then(res => {
         if (res) {
+          dispatch(addReceipt(res));
           navigation.navigate(SCREENS.HOME as never);
         }
       })

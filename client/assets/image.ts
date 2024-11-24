@@ -7,4 +7,5 @@ export {default as HOME} from './svg/home';
 export {default as RECEIPT} from './svg/receipt';
 export {default as SEARCH} from './svg/search';
 export {default as SHARE} from './svg/share';
+export {default as THEME} from './svg/theme';
 export {default as USER} from './svg/user';

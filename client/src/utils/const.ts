@@ -17,6 +17,14 @@ export const SCREENS = {
   VIEW_FORM: 'View_form',
 };
 
+export const IdType = {
+  'Aadhar Card': 'ADHR',
+  'PAN Card': 'PAN',
+  Passport: 'PASS',
+  'Driving License': 'DL',
+  Other: 'OTHR',
+};
+
 export const PaymentMethods = ['Cash', 'Card', 'UPI', 'Net Banking', 'Others'];
 
 export const idTypes = [

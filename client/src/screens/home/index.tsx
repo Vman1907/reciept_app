@@ -20,7 +20,6 @@ export default function Home() {
 
   useEffect(() => {
     fetchDetails();
-    console.log('fetching details');
   }, [fetchDetails]);
   return <BottomNavigation />;
 }

@@ -47,6 +47,11 @@ const ReceiptSlice = createSlice({
     addReceipt: (state, action: PayloadAction<typeof initState.details>) => {
       state.list.push(action.payload);
     },
+    updateReceipt: (state, action: PayloadAction<typeof initState.details>) => {
+      state.list = state.list.map(item =>
+        item.id === action.payload.id ? action.payload : item,
+      );
+    },
     setReceiptLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -116,6 +121,7 @@ export const {
   setReceiptIdNumber,
   setReceiptReceiptNumber,
   setReceiptCreatedAt,
+  updateReceipt,
 } = ReceiptSlice.actions;
 
 export default ReceiptSlice.reducer;

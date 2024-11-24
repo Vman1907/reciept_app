@@ -19,10 +19,10 @@ export default function Dashboard({navigation}: {navigation: any; route: any}) {
     (state: StoreState) => state[StoreNames.RECEIPT],
   );
 
-  const sortedList = list.sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
-  const topSixReceipts = sortedList.slice(0, 6);
+
+  // const sortedList = list.sort((a, b) => {
+  //   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  // });
 
   return (
     <SafeAreaView>
@@ -57,12 +57,11 @@ export default function Dashboard({navigation}: {navigation: any; route: any}) {
           ) : (
             <FlatList
               style={style.scrollComponent}
-              data={topSixReceipts}
+              data={list}
               renderItem={receipt => (
                 <ReceiptListItem
                   onPress={() => {
                     dispatch(setReceiptDetails(receipt.item));
-                    console.log('receipt', receipt.item);
                     nav.navigate(SCREENS.VIEW_FORM as never);
                   }}
                   receipt={receipt.item}
@@ -80,6 +79,12 @@ const style = StyleSheet.create({
   pageContainer: {
     paddingHorizontal: '5%',
     backgroundColor: 'white',
+    height: '100%',
+    display: 'flex',
+  },
+  pageContainerDark: {
+    paddingHorizontal: '5%',
+    backgroundColor: 'black',
     height: '100%',
     display: 'flex',
   },
