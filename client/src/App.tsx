@@ -5,6 +5,7 @@ import React from 'react';
 import {PaperProvider} from 'react-native-paper';
 import {Provider} from 'react-redux';
 import {AuthProvider} from './components/context/authProvider';
+import {navigationRef} from './components/context/navigationRef';
 import useTheme from './hooks/useTheme';
 import Signin from './screens/auth/signin';
 import SignUp from './screens/auth/signup';
@@ -23,7 +24,7 @@ function App(): React.JSX.Element {
     <Provider store={store}>
       <AuthProvider>
         <PaperProvider theme={theme}>
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Group>
                 <Stack.Screen

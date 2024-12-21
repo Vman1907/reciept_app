@@ -20,6 +20,8 @@ export const createReceipt = async (req: Request, res: Response): Promise<void> 
 			date: new Date(),
 		});
 
+		console.log(newReceipt);
+
 		res.status(201).json({ receipt: newReceipt, success: true });
 		return;
 	} catch (error) {

@@ -3,13 +3,14 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
-import {EDIT, SHARE} from '../../../assets/image';
+import {EDIT, SHARE, TRASH} from '../../../assets/image';
+import ConfirmationDialog from '../../components/comfirm-dialog';
 import Button from '../../components/elements/button';
 import PageHeader from '../../components/elements/pageHeader';
 import Text from '../../components/elements/text';
 import ReceiptService from '../../services/receipts.service';
 import {StoreNames, StoreState} from '../../store';
-import {reset} from '../../store/reducers/ReceiptReducer';
+import {deleteReceipt, reset} from '../../store/reducers/ReceiptReducer';
 import {Receipt} from '../../store/types/ReceiptState';
 import {IdType, SCREENS} from '../../utils/const';
 
@@ -76,6 +77,28 @@ export default function ViewForm({navigation}: {navigation: any; route: any}) {
       });
   };
 
+  const handleDelete = async () => {
+    setLoading(true);
+
+    ReceiptService.deleteReceipt(details.id)
+      .then(res => {
+        if (res) {
+          dispatch(deleteReceipt([details.id]));
+          navigation.navigate(SCREENS.HOME);
+        }
+      })
+      .catch(err => {
+        setError({
+          field: 'name',
+          message: 'Failed to delete receipt',
+        });
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -94,6 +117,14 @@ export default function ViewForm({navigation}: {navigation: any; route: any}) {
             </TouchableOpacity>
             <TouchableOpacity>
               <SHARE />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <ConfirmationDialog
+                name={details.referenceNumber}
+                onConfirm={handleDelete}
+                isLoading={loading}>
+                <TRASH />
+              </ConfirmationDialog>
             </TouchableOpacity>
           </View>
         </PageHeader>

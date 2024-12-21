@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {HOME, RECEIPT, SEARCH, USER} from '../../../assets/image';
+import {HOME, RECEIPT, USER} from '../../../assets/image';
 import ReceiptPage from '../../screens/home/all-receipt';
 import Dashboard from '../../screens/home/dashboard';
 import Profile from '../../screens/home/profile';
@@ -16,8 +16,6 @@ export default function BottomNavigation() {
       iconName = <HOME stroke={color} />;
     } else if (routeName === 'Receipt') {
       iconName = <RECEIPT stroke={color} />;
-    } else if (routeName === 'Search') {
-      iconName = <SEARCH stroke={color} />;
     } else if (routeName === 'Profile') {
       iconName = <USER stroke={color} />;
     }
@@ -35,7 +33,6 @@ export default function BottomNavigation() {
       })}>
       <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="Receipt" component={ReceiptPage} />
-      <Tab.Screen name="Search" component={SEARCH} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );

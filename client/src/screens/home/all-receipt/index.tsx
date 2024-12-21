@@ -1,5 +1,11 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import {TextInput} from '../../../components/elements/Input';
@@ -21,44 +27,45 @@ export default function ReceiptPage({navigation}: {navigation: any}) {
   const filtered = receipts.filter(receipt => {
     return (
       receipt.name.toLowerCase().includes(search.toLowerCase()) ||
-      receipt.mobile.toLowerCase().includes(search.toLowerCase())
+      receipt.mobile.includes(search.toLowerCase())
     );
   });
 
   return (
     <SafeAreaView>
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
-      <View style={style.pageContainer}>
-        <PageHeader header="View All Receipts" />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={style.pageContainer}>
+          <PageHeader header="View All Receipts" />
 
-        <View style={style.inputContainer}>
-          <TextInput
-            value={search}
-            onChangeText={setSearch}
-            placeholder="Enter customer name or mobile number"
-            style={style.input}
-          />
-        </View>
-        {loading ? (
-          <Text>Loading...</Text>
-        ) : (
-          <View style={style.scrollContainer}>
-            <FlatList
-              style={style.scrollComponent}
-              data={filtered}
-              renderItem={receipt => (
-                <ReceiptListItem
-                  onPress={() => {
-                    dispatch(setReceiptDetails(receipt.item));
-                    navigation.navigate(SCREENS.FORM);
-                  }}
-                  receipt={receipt.item}
-                />
-              )}
+          <View style={style.inputContainer}>
+            <TextInput
+              value={search}
+              onChangeText={setSearch}
+              placeholder="Enter customer name or mobile number"
+              style={style.input}
             />
           </View>
-        )}
-      </View>
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <View style={style.scrollContainer}>
+              <FlatList
+                style={style.scrollComponent}
+                data={filtered}
+                renderItem={receipt => (
+                  <ReceiptListItem
+                    onPress={() => {
+                      dispatch(setReceiptDetails(receipt.item));
+                      navigation.navigate(SCREENS.VIEW_FORM);
+                    }}
+                    receipt={receipt.item}
+                  />
+                )}
+              />
+            </View>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

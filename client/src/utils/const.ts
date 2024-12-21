@@ -1,5 +1,4 @@
-export const SERVER_URL =
-  process.env.SERVER_URL || 'http://192.168.31.115:5000/api';
+export const SERVER_URL = process.env.SERVER_URL || 'http://192.168.31.115:5000/api';
 
 export const COLORS = {
   PRIMARY: '#1C1B1F',

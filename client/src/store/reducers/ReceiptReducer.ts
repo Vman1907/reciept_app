@@ -99,6 +99,9 @@ const ReceiptSlice = createSlice({
     setReceiptCreatedAt: (state, action: PayloadAction<string>) => {
       state.details.createdAt = action.payload;
     },
+    resetDetails: state => {
+      state.details = initState.details;
+    },
   },
 });
 
@@ -122,6 +125,7 @@ export const {
   setReceiptReceiptNumber,
   setReceiptCreatedAt,
   updateReceipt,
+  resetDetails,
 } = ReceiptSlice.actions;
 
 export default ReceiptSlice.reducer;

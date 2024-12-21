@@ -8,4 +8,5 @@ export {default as RECEIPT} from './svg/receipt';
 export {default as SEARCH} from './svg/search';
 export {default as SHARE} from './svg/share';
 export {default as THEME} from './svg/theme';
+export {default as TRASH} from './svg/trash';
 export {default as USER} from './svg/user';

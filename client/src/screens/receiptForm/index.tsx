@@ -12,6 +12,7 @@ import ReceiptService from '../../services/receipts.service';
 import {StoreNames, StoreState} from '../../store';
 import {
   addReceipt,
+  resetDetails,
   setReceiptAddress,
   setReceiptAmount,
   setReceiptIdNumber,
@@ -104,8 +105,9 @@ export default function ReceiptForm({
       ReceiptService.updateReceipt(details)
         .then(res => {
           if (res) {
-            dispatch(updateReceipt(res));
+            dispatch(updateReceipt(details));
             navigation.navigate(SCREENS.HOME);
+            dispatch(resetDetails());
           }
         })
         .catch(err => {
@@ -126,8 +128,9 @@ export default function ReceiptForm({
     ReceiptService.createReceipt(details)
       .then(res => {
         if (res) {
-          dispatch(addReceipt(res));
+          dispatch(addReceipt(details));
           navigation.navigate(SCREENS.HOME as never);
+          dispatch(resetDetails());
         }
       })
       .catch(err => {
@@ -135,6 +138,9 @@ export default function ReceiptForm({
           field: 'name',
           message: 'Failed to create receipt',
         });
+        if ((err as AxiosError).response?.status === 401) {
+          navigation.navigate(SCREENS.LOGIN as never);
+        }
         console.log(err);
       })
       .finally(() => {
