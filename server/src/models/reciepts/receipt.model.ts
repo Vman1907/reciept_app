@@ -5,7 +5,6 @@ interface ReceiptCreationAttributes extends Optional<IReceipt, 'id' | 'reference
 export class Receipt extends Model<IReceipt, ReceiptCreationAttributes> implements IReceipt {
 	public user_id!: number;
 	public id!: string;
-	public date!: Date;
 	public name!: string;
 	public mobile!: string;
 	public address!: string;
@@ -30,10 +29,6 @@ Receipt.init(
 		},
 		user_id: {
 			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		date: {
-			type: DataTypes.DATEONLY,
 			allowNull: false,
 		},
 		name: {

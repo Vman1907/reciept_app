@@ -9,6 +9,8 @@ export class User extends Model<IUser, UserCreationAttributes> implements IUser 
 	public id!: string;
 	public email!: string;
 	public password!: string;
+	public receiptStartNumber!: number;
+	public receiptUpdatedAt!: Date;
 }
 
 User.init(
@@ -26,6 +28,15 @@ User.init(
 		password: {
 			type: DataTypes.STRING,
 			allowNull: false,
+		},
+		receiptStartNumber: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			defaultValue: 1,
+		},
+		receiptUpdatedAt: {
+			type: DataTypes.DATE,
+			defaultValue: new Date(),
 		},
 	},
 	{

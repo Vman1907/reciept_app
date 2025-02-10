@@ -1,6 +1,13 @@
-import {AxiosError} from 'axios';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import RNFS from 'react-native-fs';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import {EDIT, SHARE, TRASH} from '../../../assets/image';
@@ -34,48 +41,63 @@ export default function ViewForm({navigation}: {navigation: any; route: any}) {
     navigation.goBack();
   };
 
-  const handleSubmit = async () => {
-    setLoading(true);
+  // const handleDownload = async () => {
+  //   setLoading(true);
+  // };
 
-    if (details.id) {
-      ReceiptService.updateReceipt(details)
-        .then(res => {
-          if (res) {
-            navigation.navigate(SCREENS.HOME);
-          }
-        })
-        .catch(err => {
-          setError({
-            field: 'name',
-            message: 'Failed to update receipt',
-          });
-          if ((err as AxiosError).response?.status === 401) {
-            navigation.navigate(SCREENS.LOGIN as never);
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-      return;
+  const handleDownload = async () => {
+    const fileUrl =
+      'https://drive.google.com/uc?export=download&id=13FQrm-uo5RVvc-7QxSDtk7j4WPwFL88t'; // Replace with your file URL
+    const fileName = 'receipt.pdf';
+    const downloadPath =
+      Platform.OS === 'android'
+        ? `${RNFS.DownloadDirectoryPath}/${fileName}`
+        : `${RNFS.DocumentDirectoryPath}/${fileName}`;
+    const options = {
+      fromUrl: fileUrl,
+      toFile: downloadPath,
+    };
+
+    const granted = await hasAndroidPermission();
+    if (!granted) {
+      return Alert.alert(
+        'Permission Denied',
+        'Storage permission is required.',
+      );
+    }
+    try {
+      setLoading(true);
+      const result = await ReceiptService.downloadReceipt(details.id);
+      if (result instanceof Error) {
+        Alert.alert('Download Failed', 'File could not be downloaded.');
+      } else {
+        Alert.alert('Download Complete', `File saved to ${downloadPath}`);
+      }
+    } catch (err) {
+      console.error('Download Error:', err);
+      Alert.alert('Error', 'An error occurred while downloading the file.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  async function hasAndroidPermission() {
+    if (Number(Platform.Version) >= 33) {
+      return true;
     }
 
-    ReceiptService.createReceipt(details)
-      .then(res => {
-        if (res) {
-          navigation.navigate(SCREENS.HOME as never);
-        }
-      })
-      .catch(err => {
-        setError({
-          field: 'name',
-          message: 'Failed to create receipt',
-        });
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
+    console.log('Checking permission:', permission);
+
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
 
   const handleDelete = async () => {
     setLoading(true);
@@ -120,7 +142,7 @@ export default function ViewForm({navigation}: {navigation: any; route: any}) {
             </TouchableOpacity>
             <TouchableOpacity>
               <ConfirmationDialog
-                name={details.referenceNumber}
+                name={details.id}
                 onConfirm={handleDelete}
                 isLoading={loading}>
                 <TRASH />
@@ -141,12 +163,12 @@ export default function ViewForm({navigation}: {navigation: any; route: any}) {
             </Text>
           </View>
           <Text>Address: {details.address}</Text>
-          <Text>Date: {details.date.split('-').reverse().join('/')}</Text>
+          <Text>Date: {new Date(details.createdAt).toLocaleDateString()}</Text>
           <Text>Customer Name: {details.name}</Text>
           <Text>Total Amount: ₹{details.amount}</Text>
           <View style={styles.submitButton}>
             <Text>{error.message}</Text>
-            <Button loading={loading} onPress={handleSubmit}>
+            <Button loading={loading} onPress={handleDownload}>
               <Text style={styles.submitButtonText}>Download receipt</Text>
             </Button>
           </View>

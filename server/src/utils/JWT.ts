@@ -4,7 +4,7 @@ const accessTokenSecret = 'ACCESS_TOKEN_SECRET';
 const refreshTokenSecret = 'REFRESH_TOKEN_SECRET';
 
 export const generateAccessToken = (userId: string) => {
-	return jwt.sign({ userId }, accessTokenSecret, { expiresIn: '15m' });
+	return jwt.sign({ userId }, accessTokenSecret, { expiresIn: '1d' });
 };
 
 export const generateRefreshToken = (userId: string) => {

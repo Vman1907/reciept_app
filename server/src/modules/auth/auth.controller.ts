@@ -52,14 +52,14 @@ export const signIn = async (req: Request, res: Response) => {
 			await Session.create({
 				id: crypto.randomUUID(),
 				user_id: user.id,
-				expiresAt: new Date(Date.now() + 1000 * 60 * 60),
+				expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
 				loginAt: new Date(),
 				createdAt: new Date(),
 				updatedAt: new Date(),
 			});
 		} else {
 			await Session.update(
-				{ expiresAt: new Date(Date.now() + 1000 * 60 * 60) },
+				{ expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) },
 				{ where: { user_id: user.id } }
 			);
 		}

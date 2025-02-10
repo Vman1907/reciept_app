@@ -4,8 +4,12 @@ import api from '../utils/api';
 
 export default class AuthService {
   static async signup(email: string, password: string) {
-    const {data} = await api.post('/auth/signup', {email, password});
-    return data.success;
+    try {
+      const {data} = await api.post('/auth/signup', {email, password});
+      return data.success;
+    } catch (err) {
+      return false;
+    }
   }
 
   static async signin(email: string, password: string) {
@@ -19,7 +23,10 @@ export default class AuthService {
 
       return true;
     } catch (error: any) {
-      console.error('Signin error:', error);
+      if (error instanceof AxiosError) {
+        console.error('Signin error:', error);
+        return false;
+      }
       return false;
     }
   }

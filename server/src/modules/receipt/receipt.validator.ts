@@ -1,6 +1,5 @@
 export type createReceiptValidator = {
 	id?: number;
-	date: string;
 	name: string;
 	mobile: string;
 	address: string;
@@ -10,7 +9,5 @@ export type createReceiptValidator = {
 	referenceNumber?: string;
 	idType: 'PAN Card' | 'Aadhar Card' | 'Passport' | 'Driving License' | 'Other';
 	idNumber: string;
-	receiptNumber: number;
+	receiptNumber?: number;
 };
-
-

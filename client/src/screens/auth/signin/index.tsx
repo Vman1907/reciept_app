@@ -53,9 +53,10 @@ export default function Signin({navigation}: {navigation: any}) {
     AuthService.signin(email, password)
       .then(res => {
         if (!res) {
-          setError('Login failed');
+          setError('Invalid credentials');
           return;
         }
+        console.log('signin success');
         setAuth(true);
       })
       .catch(err => {
@@ -84,9 +85,9 @@ export default function Signin({navigation}: {navigation: any}) {
                 onChangeText={setPassword}
                 placeholder="Password"
               />
-            </View>
             <View>
               {error && <Text style={styles.errorText}>{error}</Text>}
+            </View>
             </View>
             <Button loading={loading} onPress={handleLogin} disabled={loading}>
               <Text style={styles.loginText}>Login</Text>

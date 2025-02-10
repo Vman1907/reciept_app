@@ -80,13 +80,6 @@ export default function ReceiptForm({
       });
       return;
     }
-    if (details.referenceNumber.trim().length < 3) {
-      setError({
-        field: 'referenceNumber',
-        message: 'Reference number should be atleast 3 characters long',
-      });
-      return;
-    }
     if (details.idNumber.trim().length < 3) {
       setError({
         field: 'idNumber',
@@ -104,13 +97,20 @@ export default function ReceiptForm({
     if (details.id) {
       ReceiptService.updateReceipt(details)
         .then(res => {
-          if (res) {
-            dispatch(updateReceipt(details));
-            navigation.navigate(SCREENS.HOME);
-            dispatch(resetDetails());
+          console.log(res);
+          if (res instanceof Error) {
+            setError({
+              field: 'name',
+              message: 'Failed to update receipt',
+            });
+            return;
           }
+          dispatch(updateReceipt(res));
+          navigation.navigate(SCREENS.HOME);
+          dispatch(resetDetails());
         })
         .catch(err => {
+          console.log(err);
           setError({
             field: 'name',
             message: 'Failed to update receipt',
@@ -125,15 +125,24 @@ export default function ReceiptForm({
       return;
     }
 
+    console.log(details);
+
     ReceiptService.createReceipt(details)
       .then(res => {
-        if (res) {
-          dispatch(addReceipt(details));
-          navigation.navigate(SCREENS.HOME as never);
-          dispatch(resetDetails());
+        console.log(res, 'hello');
+        if (res instanceof Error) {
+          setError({
+            field: 'name',
+            message: 'Failed to create receipt',
+          });
+          return;
         }
+        dispatch(addReceipt(res));
+        navigation.navigate(SCREENS.HOME as never);
+        dispatch(resetDetails());
       })
       .catch(err => {
+        console.log(err);
         setError({
           field: 'name',
           message: 'Failed to create receipt',

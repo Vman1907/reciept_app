@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {navigationRef} from '../components/context/navigationRef';
-import {SERVER_URL} from './const';
+import {SCREENS, SERVER_URL} from './const';
 
 const api = axios.create({
   baseURL: SERVER_URL,
@@ -31,10 +31,7 @@ api.interceptors.response.use(
         // Clear tokens and redirect to sign-in
         await AsyncStorage.removeItem('auth-token');
         await AsyncStorage.removeItem('refresh-token');
-        navigationRef?.current?.reset({
-          index: 0,
-          routes: [{name: 'SignIn'}],
-        });
+        navigationRef?.current?.navigate(SCREENS.LOGIN as never);
         return Promise.reject(error);
       }
       try {
@@ -43,18 +40,12 @@ api.interceptors.response.use(
           // Clear tokens from AsyncStorage and redirect
           await AsyncStorage.removeItem('auth-token');
           await AsyncStorage.removeItem('refresh-token');
-          navigationRef?.current?.reset({
-            index: 0,
-            routes: [{name: 'SignIn'}],
-          });
+          navigationRef?.current?.navigate(SCREENS.LOGIN as never);
         }
       } catch (err) {
         await AsyncStorage.removeItem('auth-token');
         await AsyncStorage.removeItem('refresh-token');
-        navigationRef?.current?.reset({
-          index: 0,
-          routes: [{name: 'SignIn'}],
-        });
+        navigationRef?.current?.navigate(SCREENS.LOGIN as never);
       }
     }
     return Promise.reject(error);
