@@ -14,7 +14,7 @@ const router = express.Router();
 router.route('/').all(authenticate).get(getReceipts).post(createReceipt);
 router.route('/dashboard-data').all(authenticate).get(getReceipts)
 router.route('/:id').all(authenticate).put(updateReceipt).delete(deleteReceipt);
-router.route('/:id/download').get(generateReceiptPDF);
-router.route('/start-number').post(changeReceiptStartNumber);
+router.route('/:id/download').all(authenticate).get(generateReceiptPDF);
+router.route('/start-number').all(authenticate).post(changeReceiptStartNumber);
 
 export default router;
